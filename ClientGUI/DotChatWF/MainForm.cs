@@ -118,8 +118,18 @@ namespace DotChatWF
         lastMsgID++;
       }
     }
-  }
-  [Serializable]
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+    [Serializable]
     public class Message
     {
         public string username = "";
