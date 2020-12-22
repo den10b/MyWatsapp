@@ -94,17 +94,6 @@ namespace Server
   {
     public List<tokens> list_tokens = new List<tokens>();
 
-    public void addValera()
-    {
-      Random rand = new Random();
-      int int_token = rand.Next(1000 * 1000, 10 * 1000 * 1000);
-      tokens token_record = new tokens(int_token, "Valera", "UWP");
-      token_record.login = "Valera";
-      token_record.password = "UWP";
-      token_record.token = int_token;
-      list_tokens.Add(token_record);
-    }
-
     public int GenToken()
     {
       Random rand = new Random();
@@ -202,25 +191,18 @@ namespace Server
       {
         try
         {
-          //Console.WriteLine("Dannie vigruzheni");
           string json = "";
           using (StreamReader sr = new StreamReader(filename, System.Text.Encoding.Default))
           {
             json = sr.ReadToEnd();
           }
           Program.Sessions = JsonConvert.DeserializeObject<SessionsClass>(json);
-          for (int i = 0; i < list_tokens.Count; i++)
-          {
-            list_tokens[i].token = 0;
-          }
         }
         catch (Exception e)
         {
           Console.WriteLine(e.Message);
         }
-        // Console.WriteLine($"Загружено записей: {this.list_tokens.Count}");
       }
-
     }
   }
 

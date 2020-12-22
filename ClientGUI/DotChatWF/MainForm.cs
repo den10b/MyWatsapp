@@ -43,16 +43,14 @@ namespace DotChatWF
 
         private void btnSend_Click(object sender, EventArgs e) {
             if (int_token == 0)
-      {
-        MessageBox.Show("Please log in or register");
-      }
-      else 
-      { 
-            SendMessage(new Message() { 
-                username = fieldUsername.Text,
-                text = fieldMessage.Text,
-            });
-      }
+            {
+               MessageBox.Show("Please log in or register");
+            }
+            else 
+            { 
+                SendMessage(new Message() {  username = fieldUsername.Text,text = fieldMessage.Text, });
+                fieldMessage.Clear();
+            }
     }
 
         // Отправляет сообщение на сервер
@@ -61,9 +59,7 @@ namespace DotChatWF
             WebRequest req = WebRequest.Create("http://localhost:5000/api/chat");
             req.Method = "POST";
             string postData = JsonConvert.SerializeObject(msg);
-            //byte[] bytes = Encoding.UTF8.GetBytes(postData);
             req.ContentType = "application/json";
-            //req.ContentLength = bytes.Length;
             StreamWriter reqStream = new StreamWriter(req.GetRequestStream());
             reqStream.Write(postData);
             reqStream.Close();
@@ -91,20 +87,20 @@ namespace DotChatWF
     private void MainForm_Load(object sender, EventArgs e)
     {
       int_token = 0;
-      AuthForm = new AuthentificationForm();
-      RegForm = new RegistartionForm();
       TextBox_username = fieldUsername;
 
     }
     private void btnAuth_Click(object sender, EventArgs e)
-    {
+        {
+            AuthForm = new AuthentificationForm();
             AuthForm.mForm = this;
             AuthForm.Show();
             this.Visible = false;
     }
         private void btnReg_Click(object sender, EventArgs e)
-    {
-      RegForm.mForm = this;
+        {
+            RegForm = new RegistartionForm();
+            RegForm.mForm = this;
       RegForm.Show();
       this.Visible = false;
     }
@@ -117,6 +113,7 @@ namespace DotChatWF
         listMessages.Items.Add($"[{msg.username}] {msg.text}");
         lastMsgID++;
       }
+
     }
 
         private void label1_Click(object sender, EventArgs e)

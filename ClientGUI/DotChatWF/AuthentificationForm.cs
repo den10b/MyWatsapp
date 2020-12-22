@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,32 +38,54 @@ namespace DotChatWF
             string pass = passBox.Text;
             auth_data.login = login;
             auth_data.password = pass;
-            WebRequest req = WebRequest.Create("http://localhost:5000/api/reg");
-                req.Method = "POST"; 
-                string postData = JsonConvert.SerializeObject(auth_data);
-                req.ContentType = "application/json";
-                StreamWriter reqStream = new StreamWriter(req.GetRequestStream());
-                reqStream.Write(postData);
-                reqStream.Close();
-                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-                StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.GetEncoding("utf-8"));
-                string content = sr.ReadToEnd();
-                sr.Close();
-                int int_token = Convert.ToInt32(content, 10);
-            if (int_token != -2) {
-                MessageBox.Show("Такого логина не существует");
-            }
-            else if (int_token == -1)
+            string stream;
+            string file = @"C:\Users\den10\source\repos\MyWatsapp\Server\Server\data_sessions.json";
+            using (StreamReader sr = new StreamReader(file))
             {
-                MessageBox.Show("Неверный пароль к данному логину");
+                stream = sr.ReadToEnd();
             }
-            else { 
-                mForm.int_token = int_token;
-                    mForm.TextBox_username.Text = auth_data.login;
-                    mForm.Show();
-                    this.Visible = false;
+            var m = JsonExtensions.ToObject<Temperatures>(stream);
+            int tst = 0;
+            for (int i = 0; i != m.ListTokens.Count(); i++)
+            {
+                if (login == m.ListTokens[i].Login)
+                {
+                    if (pass == m.ListTokens[i].Password)
+                    {
+                        tst = 1;
+                        WebRequest req = WebRequest.Create("http://localhost:5000/api/reg");
+                        req.Method = "POST";
+                        string postData = JsonConvert.SerializeObject(auth_data);
+                        req.ContentType = "application/json";
+                        StreamWriter reqStream = new StreamWriter(req.GetRequestStream());
+                        reqStream.Write(postData);
+                        reqStream.Close();
+                        HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                        StreamReader sr = new StreamReader(resp.GetResponseStream(), Encoding.GetEncoding("utf-8"));
+                        string content = sr.ReadToEnd();
+                        sr.Close();
+                        int int_token = Convert.ToInt32(content, 10);
+                        mForm.int_token = int_token;
+                        mForm.TextBox_username.Text = auth_data.login;
+                        mForm.Show();
+                        this.Visible = false;
+                    }
+                    else {
+                        MessageBox.Show("Неверный пароль");
+                        tst = 1;
+                    }
+                
                 }
+            }
+           if (tst!=1) MessageBox.Show("Логин не зарегистрирован");
         }
+
+
+
+
+
+
+
         private void AuthentificationForm_FormClosing(object sender, FormClosingEventArgs e)
         {
            
@@ -76,5 +99,27 @@ namespace DotChatWF
         {
 
         }
+        public partial class Temperatures
+        {
+            [JsonProperty("list_tokens")]
+            public ListToken[] ListTokens { get; set; }
+        }
+        public partial class ListToken
+        {
+            [JsonProperty("token")]
+            public long Token { get; set; }
+            [JsonProperty("login")]
+            public string Login { get; set; }
+            [JsonProperty("password")]
+            public string Password { get; set; }
+        }
     }
+    public static class JsonExtensions
+    {
+        public static T ToObject<T>(this string jsonText)
+        {
+            return JsonConvert.DeserializeObject<T>(jsonText);
+        }
+    }
+
 }

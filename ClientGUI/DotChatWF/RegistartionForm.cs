@@ -68,7 +68,7 @@ namespace DotChatWF
       }
         else
       {
-        MessageBox.Show("Passwords don't match");
+        MessageBox.Show("Пароли не совпадают");
       }
 
     }
