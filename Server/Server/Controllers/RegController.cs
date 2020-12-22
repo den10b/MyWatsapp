@@ -11,7 +11,8 @@ namespace Server.Controllers
   [Route("api/[controller]")]
   [ApiController]
   public class RegController : ControllerBase
-  {
+  {            
+
     // POST api/<RegController>
     [HttpPost]
     public int Post([FromBody] AuthData auth_data)
