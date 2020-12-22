@@ -33,7 +33,7 @@ namespace DotChat
         static void Main(string[] args)
         {
             Application.Init();
-            
+
             //ColorScheme colorDark = new ColorScheme();
             //colorDark.Normal = new Terminal.Gui.Attribute(Color.White, Color.DarkGray);
 
@@ -42,15 +42,18 @@ namespace DotChat
                 new MenuBarItem("_App", new MenuItem[] {
                     new MenuItem("_Quit", "Close the app", Application.RequestStop),
                 }),
-            }) {
-                X = 0, Y = 0,
+            })
+            {
+                X = 0,
+                Y = 0,
                 Width = Dim.Fill(),
                 Height = 1,
             };
             Application.Top.Add(menu);
 
             // Создание главного окна
-            winMain = new Window() {
+            winMain = new Window()
+            {
                 X = 0,
                 Y = 1,
                 Width = Dim.Fill(),
@@ -61,7 +64,8 @@ namespace DotChat
             Application.Top.Add(winMain);
 
             // Создание окна с сообщениями
-            winMessages = new Window() {
+            winMessages = new Window()
+            {
                 X = 0,
                 Y = 0,
                 Width = winMain.Width,
@@ -70,7 +74,8 @@ namespace DotChat
             winMain.Add(winMessages);
 
             // Создание надписи с username
-            labelUsername = new Label() { 
+            labelUsername = new Label()
+            {
                 X = 0,
                 Y = Pos.Bottom(winMain) - 5,
                 Width = 15,
@@ -128,9 +133,11 @@ namespace DotChat
             int lastMsgID = 0;
             Timer updateLoop = new Timer();
             updateLoop.Interval = 1000;
-            updateLoop.Elapsed += (object sender, ElapsedEventArgs e) => {
+            updateLoop.Elapsed += (object sender, ElapsedEventArgs e) =>
+            {
                 Message msg = GetMessage(lastMsgID);
-                if (msg != null) {
+                if (msg != null)
+                {
                     messages.Add(msg);
                     MessagesUpdate();
                     lastMsgID++;
@@ -142,7 +149,8 @@ namespace DotChat
         }
 
         // Реакция на клик кнопки
-        static void OnBtnSendClick() {
+        static void OnBtnSendClick()
+        {
             if (fieldUsername.Text.Length != 0 && fieldMessage.Text.Length != 0)
             {
                 Message msg = new Message()
@@ -156,12 +164,16 @@ namespace DotChat
         }
 
         // Синхронизирует список сообщений с представлением
-        static void MessagesUpdate() {
+        static void MessagesUpdate()
+        {
             winMessages.RemoveAll();
             int offset = 0;
-            for (var i = messages.Count - 1; i >= 0; i--) {
-                View msg = new View() { 
-                    X = 0, Y = offset,
+            for (var i = messages.Count - 1; i >= 0; i--)
+            {
+                View msg = new View()
+                {
+                    X = 0,
+                    Y = offset,
                     Width = winMessages.Width,
                     Height = 1,
                     Text = $"[{messages[i].username}] {messages[i].text}",
@@ -173,7 +185,8 @@ namespace DotChat
         }
 
         // Отправляет сообщение на сервер
-        static void SendMessage(Message msg) {
+        static void SendMessage(Message msg)
+        {
             WebRequest req = WebRequest.Create("http://localhost:5000/api/chat");
             req.Method = "POST";
             string postData = JsonConvert.SerializeObject(msg);
@@ -188,13 +201,21 @@ namespace DotChat
         }
 
         // Получает сообщение с сервера
-        static Message GetMessage(int id) {
-            WebRequest req = WebRequest.Create($"http://localhost:5000/api/chat/{id}");
-            WebResponse resp = req.GetResponse();
-            string smsg = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+        static Message GetMessage(int id)
+        {
+            try
+            {
+                WebRequest req = WebRequest.Create($"http://localhost:5000/api/chat/{id}");
+                WebResponse resp = req.GetResponse();
+                string smsg = new StreamReader(resp.GetResponseStream()).ReadToEnd();
 
-            if (smsg == "Not found") return null;
-            return JsonConvert.DeserializeObject<Message>(smsg);
+                if (smsg == "Not found") return null;
+                return JsonConvert.DeserializeObject<Message>(smsg);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
