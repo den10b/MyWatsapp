@@ -15,13 +15,14 @@ namespace DotChatWF
 {
   public partial class RegistartionForm : Form
   {
-    public class AuthData
+        public MainForm mForm;
+        public class AuthData
     {
       public string login { get; set; }
       public string password { get; set; }
     }
 
-    public MainForm mForm; 
+    
     public RegistartionForm()
     {
       InitializeComponent();

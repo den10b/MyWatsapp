@@ -86,11 +86,7 @@ namespace DotChatWF
             }
         }
 
-    private void btnAuth_Click(object sender, EventArgs e)
-    {
-      AuthForm.Show();
-      this.Visible = false;
-    }
+
 
     private void MainForm_Load(object sender, EventArgs e)
     {
@@ -100,8 +96,13 @@ namespace DotChatWF
       TextBox_username = fieldUsername;
 
     }
-
-    private void btnReg_Click(object sender, EventArgs e)
+    private void btnAuth_Click(object sender, EventArgs e)
+    {
+            AuthForm.mForm = this;
+            AuthForm.Show();
+            this.Visible = false;
+    }
+        private void btnReg_Click(object sender, EventArgs e)
     {
       RegForm.mForm = this;
       RegForm.Show();
