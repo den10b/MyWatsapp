@@ -113,7 +113,7 @@ namespace Server
           login_exist = true;
           if (item.password == password)
           {
-            int token = GenToken();
+            int token = item.token;
             tokens record_token = new tokens(token, login, password);
             list_tokens[row_num].token = token;
             //list_tokens.Add(record_token);

@@ -21,6 +21,7 @@ namespace DotChatWF
         {
             public string login { get; set; }
             public string password { get; set; }
+            public int token { get; set; }
         }
         public AuthentificationForm()
     {
@@ -52,9 +53,12 @@ namespace DotChatWF
                 {
                     if (pass == m.ListTokens[i].Password)
                     {
+                        var token = m.ListTokens[i].Token;
                         tst = 1;
-                        WebRequest req = WebRequest.Create("http://localhost:5000/api/reg");
+                        WebRequest req = WebRequest.Create("http://localhost:5000/api/Auth");
                         req.Method = "POST";
+                        int token1 = Convert.ToInt32(token);
+                        auth_data.token = token1;
                         string postData = JsonConvert.SerializeObject(auth_data);
                         req.ContentType = "application/json";
                         StreamWriter reqStream = new StreamWriter(req.GetRequestStream());
