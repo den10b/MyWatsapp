@@ -44,7 +44,7 @@ namespace DotChatWF
         private void btnSend_Click(object sender, EventArgs e) {
             if (int_token == 0)
             {
-               MessageBox.Show("Please log in or register");
+               MessageBox.Show("Войдите или зарегистрируйтесь");
             }
             else 
             { 
@@ -86,11 +86,16 @@ namespace DotChatWF
 
     private void MainForm_Load(object sender, EventArgs e)
     {
-      int_token = 0;
+            string Height1 = File.ReadLines("Config.Json").Skip(4).First();
+            string Width1 = File.ReadLines("Config.Json").Skip(7).First();
+            int W = Convert.ToInt32(Width1);
+            int H = Convert.ToInt32(Height1);
+            this.Size = new Size(W, H);
+            int_token = 0;
       TextBox_username = fieldUsername;
 
-    }
-    private void btnAuth_Click(object sender, EventArgs e)
+        }
+        private void btnAuth_Click(object sender, EventArgs e)
         {
             AuthForm = new AuthentificationForm();
             AuthForm.mForm = this;

@@ -23,12 +23,14 @@ namespace Server
             Sessions.LoadFromFile();
            // Console.WriteLine(Sessions.list_tokens.Count);
             CreateHostBuilder(args).Build().Run();
+           
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    Console.WriteLine("Server is running...");
                     webBuilder.UseStartup<Startup>();
                 });
 

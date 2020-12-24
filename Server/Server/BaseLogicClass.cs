@@ -38,7 +38,9 @@ namespace Server
       ms.timestamp = DateTime.UtcNow;
       messages.Add(ms);
       Console.WriteLine(messages.Count);
-    }
+      File.AppendAllText("data.txt", ms.username + ": ");
+      File.AppendAllText("data.txt", ms.text + "\n");
+        }
 
     public void Add(string username, string text)
     {
@@ -64,7 +66,8 @@ namespace Server
       messages.Clear();
       message ms = new message();
       messages.Add(ms);
-    }
+
+        }
 
   }
 
@@ -156,22 +159,21 @@ namespace Server
     }
 
 
-    public void SaveToFile(string filename = "data_sessions.json")
+    public void SaveToFile(string filename = "data_sessions.json", string txtfile = "data.txt" )
     {
       if (File.Exists(filename))
       {
         File.Delete(filename);
       }
-
-      try
+            try
       {
         string Data = JsonConvert.SerializeObject(Program.Sessions);
-
         using (StreamWriter sw = new StreamWriter(filename, false, System.Text.Encoding.Default))
         {
           sw.WriteLine(Data);
         }
-      }
+    
+            }
       catch (Exception e)
       {
         Console.WriteLine(e.Message);
